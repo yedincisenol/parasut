@@ -1,0 +1,410 @@
+<?php
+
+namespace yedincisenol\Parasut;
+
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7;
+use GuzzleHttp\Exception\ClientException;
+use Psr\Http\Message\StreamInterface;
+use yedincisenol\Parasut\Exceptions\NotFoundException;
+use yedincisenol\Parasut\Exceptions\ParasutException;
+use yedincisenol\Parasut\Exceptions\UnproccessableEntityException;
+use yedincisenol\Parasut\Models\Contact;
+use yedincisenol\Parasut\Models\EArchive;
+use yedincisenol\Parasut\Models\EInvoice;
+use yedincisenol\Parasut\Models\EInvoiceInbox;
+use yedincisenol\Parasut\Models\PurchaseBill;
+use yedincisenol\Parasut\Models\SaleInvoice;
+use yedincisenol\Parasut\Models\Tag;
+use yedincisenol\Parasut\Models\Trackable;
+
+class Client
+{
+
+    /**
+     * The base api url.
+     *
+     * @return string
+     */
+    const API_URL = 'https://api.parasut.com/v4/';
+
+    /**
+     * The oAuth token url.
+     *
+     * @var string
+     */
+    const API_TOKEN_URL = 'https://api.parasut.com/oauth/token';
+
+    /**
+     * The base api url for stage.
+     *
+     * @return string
+     */
+    const STAGE_API_URL = 'https://api.heroku-staging.parasut.com/v4/';
+
+    /**
+     * The oAuth token url for stage.
+     *
+     * @var string
+     */
+    const STAGE_API_TOKEN_URL = 'https://api.heroku-staging.parasut.com/oauth/token';
+
+    /**
+     * Parasut connection config
+     * @var array
+     */
+    private $config = [
+        'client_id'     => null,
+        'client_secret' => null,
+        'redirect_uri'  => null,
+        'username'      => null,
+        'password'      => null,
+        'company_id'    => null
+    ];
+
+    /**
+     * Users access token
+     * @var
+     */
+    private $accessToken = null;
+
+    /**
+     * Refresh token
+     * @var null
+     */
+    private $refreshToken = null;
+
+    /**
+     * Token expires at
+     * @var null
+     */
+    private $expiresAt = null;
+
+    /**
+     * @var bool
+     */
+    private $isStage = false;
+
+    /**
+     * GuzzleHttp client
+     * @var null
+     */
+    private $client = null;
+
+    /**
+     * Client constructor.
+     * @param $clientID
+     * @param $clientSecret
+     * @param $redirectUri
+     * @param $username
+     * @param $password
+     * @param $companyID
+     * @param bool $isStage
+     */
+    public function __construct(
+        $clientID,
+        $clientSecret,
+        $redirectUri,
+        $username,
+        $password,
+        $companyID,
+        $isStage = false
+    ) {
+        $this->config = [
+            'client_id'     => $clientID,
+            'client_secret' => $clientSecret,
+            'redirect_uri'  => $redirectUri,
+            'username'      => $username,
+            'password'      => $password,
+            'company_id'    => $companyID
+        ];
+
+        $this->isStage = $isStage;
+    }
+
+    /**
+     * Set users access token
+     * @param $accessToken
+     * @return $this
+     */
+    public function setToken($accessToken)
+    {
+        $this->accessToken = $accessToken;
+
+        return $this;
+    }
+
+    /**
+     * Set access token
+     * @param $token
+     */
+    public function setRefreshToken($token)
+    {
+        $this->refreshToken = $token;
+    }
+
+    /**
+     * Set expires at
+     * @param $expiresIn
+     */
+    public function setExpiresAt($expiresIn)
+    {
+        $this->expiresAt = strtotime('-10 minutes') + $expiresIn;
+    }
+
+    /**
+     * Login and fill credentials
+     */
+    public function login()
+    {
+        $client = new \GuzzleHttp\Client([
+            'base_url'  =>  $this->getTokenBaseUrl()
+        ]);
+
+        $token = $client->post($this->getTokenBaseUrl(), [
+            'form_params' =>  [
+                'grant_type'    =>  'password',
+                'client_id'     =>  $this->config['client_id'],
+                'client_secret' =>  $this->config['client_secret'],
+                'username'      =>  $this->config['username'],
+                'password'      =>  $this->config['password'],
+                'redirect_uri'  =>  $this->config['redirect_uri']
+            ]
+        ]);
+
+        $token = $this->toArray($token->getBody());
+        $this->setToken($token['access_token']);
+        $this->setRefreshToken($token['refresh_token']);
+        $this->setExpiresAt($token['expires_in']);
+
+        return $this;
+    }
+
+    /**
+     * Get users access token
+     * @return mixed
+     */
+    public function getToken()
+    {
+        if ($this->accessToken && strtotime('now') < $this->expiresAt) {
+            return $this->accessToken;
+        }
+
+        $this->login();
+
+        return $this->accessToken;
+    }
+
+    /**
+     * Response to array
+     * @param StreamInterface $response
+     * @return mixed
+     */
+    public function toArray(StreamInterface $response)
+    {
+        return json_decode((string) $response, true);
+    }
+
+    /**
+     * @return string
+     */
+    private function getTokenBaseUrl()
+    {
+        if ($this->isStage) {
+            return self::STAGE_API_TOKEN_URL;
+        }
+
+        return self::API_TOKEN_URL;
+    }
+
+    /**
+     * Get guzzle client;
+     * @return \GuzzleHttp\Client
+     */
+    public function getClient()
+    {
+        if ($this->client) {
+            return $this->client;
+        }
+
+        $this->client = new \GuzzleHttp\Client([
+            'base_uri'  =>  $this->getBaseUrl(),
+            'headers'   =>  [
+                'Authorization' =>  $this->getAuth(),
+                'Content-type' => 'application/json; charset=utf-8',
+            ]
+        ]);
+
+        return $this->client;
+    }
+
+    /**
+     * Send a request
+     * @param $method
+     * @param $path
+     * @param array $query
+     * @param array $body
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     */
+    public function request($method, $path, $query = [], $body = [])
+    {
+        $response = null;
+        $body = json_encode($body);
+
+        try {
+            $response = $this->getClient()->request($method, $path, [
+                'query' =>  $query,
+                'body'  =>  $body,
+            ]);
+
+            return $response;
+        } catch (ClientException $e) {
+            $this->errorHandler($e);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Handle paraşüt errors
+     * @param RequestException $e
+     * @throws NotFoundException
+     * @throws ParasutException
+     * @throws UnproccessableEntityException
+     */
+    private function errorHandler(RequestException $e)
+    {
+        $responseBody = (string) $e->getResponse()->getBody();
+        $statusCode = $e->getResponse()->getStatusCode();
+        switch ($statusCode) {
+            case 422:
+                throw new UnproccessableEntityException($responseBody, $statusCode);
+                break;
+            case 404:
+                throw new NotFoundException($responseBody . ' - Not Found', $statusCode);
+                break;
+            case 500:
+                throw new ParasutException('Server Error', 500);
+                break;
+            case 401:
+                $this->setToken(null);
+                $this->login();
+                break;
+            default:
+                throw new ParasutException($responseBody, $statusCode);
+                break;
+        }
+    }
+
+    /**
+     * Get auth
+     * @return string
+     */
+    private function getAuth()
+    {
+        return 'Bearer ' . $this->getToken();
+    }
+
+    /**
+     * Get base url of API
+     * @return string
+     */
+    private function getBaseUrl()
+    {
+        $url = $this->isStage ? self::STAGE_API_URL : self::API_URL;
+        return $url . $this->config['company_id'] . '/';
+    }
+
+    /**
+     * @param $path
+     * @param $parameters
+     * @return \Psr\Http\Message\StreamInterface
+     */
+    public function get($path, $parameters)
+    {
+        return $this->request('GET', $path, $parameters);
+    }
+
+    /**
+     * Make create request
+     * @param $path
+     * @param $request
+     * @return StreamInterface
+     */
+    public function post($path, $request)
+    {
+        return $this->request('POST', $path, [], $request);
+    }
+
+    /**
+     * Get SaleInvoice model
+     * @return SaleInvoice
+     */
+    public function saleInvoice()
+    {
+        return new SaleInvoice($this);
+    }
+
+    /**
+     * Get tag object
+     * @return Tag
+     */
+    public function tag()
+    {
+        return new Tag($this);
+    }
+
+    /**
+     * Get a Contact object
+     * @return Contact
+     */
+    public function contact()
+    {
+        return new Contact($this);
+    }
+
+    /**
+     * Get a Purchase Bill object
+     * @return PurchaseBill
+     */
+    public function purchaseBill()
+    {
+        return new PurchaseBill($this);
+    }
+
+    /**
+     * Get EInvoice object
+     * @return EInvoiceInbox
+     */
+    public function eInvoiceInbox()
+    {
+        return new EInvoiceInbox($this);
+    }
+
+    /**
+     * E-Archive object
+     * @return EArchive
+     */
+    public function eArchive()
+    {
+        return new EArchive($this);
+    }
+
+    /**
+     * Get E-Invoice object
+     * @return EInvoice
+     */
+    public function eInvoice()
+    {
+        return new EInvoice($this);
+    }
+
+    /**
+     * Get Trackable object
+     * @return Trackable
+     */
+    public function trackable()
+    {
+        return new Trackable($this);
+    }
+}
