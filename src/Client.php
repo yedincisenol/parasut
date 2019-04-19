@@ -245,6 +245,10 @@ class Client
      * @param array $query
      * @param array $body
      * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @throws NotFoundException
+     * @throws ParasutException
+     * @throws UnproccessableEntityException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function request($method, $path, $query = [], $body = [])
     {
@@ -319,6 +323,10 @@ class Client
      * @param $path
      * @param $parameters
      * @return \Psr\Http\Message\StreamInterface
+     * @throws NotFoundException
+     * @throws ParasutException
+     * @throws UnproccessableEntityException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function get($path, $parameters)
     {
@@ -330,6 +338,10 @@ class Client
      * @param $path
      * @param $request
      * @return StreamInterface
+     * @throws NotFoundException
+     * @throws ParasutException
+     * @throws UnproccessableEntityException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function post($path, $request)
     {

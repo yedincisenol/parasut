@@ -16,6 +16,16 @@ class LaravelServiceProvider extends ServiceProvider
     protected $defer = false;
 
     /**
+     * Config assets publish
+     */
+    public function boot()
+    {
+        $this->publishes([
+            __DIR__ . '/../config/parasut.php' => config_path('parasut.php')
+        ], 'parasut');
+    }
+
+    /**
      * Register the application services.
      *
      * @return void

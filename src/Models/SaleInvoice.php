@@ -14,6 +14,10 @@ class SaleInvoice extends Model
      * @param Request|RequestModel $request
      * @param array $query
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \yedincisenol\Parasut\Exceptions\NotFoundException
+     * @throws \yedincisenol\Parasut\Exceptions\ParasutException
+     * @throws \yedincisenol\Parasut\Exceptions\UnproccessableEntityException
      */
     public function payment(RequestModel $request, $query = [])
     {
