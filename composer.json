@@ -16,5 +16,15 @@
             "name": "brahim S. Orencik",
             "email": "o@yedincisenol.com"
         }
-    ]
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "yedincisenol\\Parasut\\Laravel\\LaravelServiceProvider"
+            ],
+            "aliases": {
+                "Parasut": "yedincisenol\\Parasut\\Laravel\\LaravelFacede"
+            }
+        }
+    }
 }
