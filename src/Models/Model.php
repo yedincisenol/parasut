@@ -23,6 +23,10 @@ abstract class Model
      * List all models
      * @param array $parameters
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \yedincisenol\Parasut\Exceptions\NotFoundException
+     * @throws \yedincisenol\Parasut\Exceptions\ParasutException
+     * @throws \yedincisenol\Parasut\Exceptions\UnproccessableEntityException
      */
     public function all($parameters = [])
     {
@@ -36,6 +40,10 @@ abstract class Model
      * @param Request|RequestModel $request
      * @param array $query
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \yedincisenol\Parasut\Exceptions\NotFoundException
+     * @throws \yedincisenol\Parasut\Exceptions\ParasutException
+     * @throws \yedincisenol\Parasut\Exceptions\UnproccessableEntityException
      */
     public function create(RequestModel $request, $query = [])
     {
@@ -49,6 +57,10 @@ abstract class Model
      * @param Request|RequestModel $request
      * @param array $query
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \yedincisenol\Parasut\Exceptions\NotFoundException
+     * @throws \yedincisenol\Parasut\Exceptions\ParasutException
+     * @throws \yedincisenol\Parasut\Exceptions\UnproccessableEntityException
      */
     public function update(RequestModel $request, $query = [])
     {
@@ -61,6 +73,10 @@ abstract class Model
      * Delete a model
      * @param $id
      * @return bool
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \yedincisenol\Parasut\Exceptions\NotFoundException
+     * @throws \yedincisenol\Parasut\Exceptions\ParasutException
+     * @throws \yedincisenol\Parasut\Exceptions\UnproccessableEntityException
      */
     public function delete($id)
     {
@@ -72,12 +88,16 @@ abstract class Model
     /**
      * Get a model object
      * @param $id
-     * @param $query
+     * @param array $query
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \yedincisenol\Parasut\Exceptions\NotFoundException
+     * @throws \yedincisenol\Parasut\Exceptions\ParasutException
+     * @throws \yedincisenol\Parasut\Exceptions\UnproccessableEntityException
      */
     public function show($id, $query = [])
     {
-        $response = $this->parasut->request('GET', $this->path. '/' . $id, $query);
+        $response = $this->parasut->request('GET', $this->path . '/' . $id, $query);
 
         return new Response($response->getBody());
     }

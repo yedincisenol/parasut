@@ -12,10 +12,14 @@ class EInvoice extends Model
      * Get PDF of invoice
      * @param $id
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \yedincisenol\Parasut\Exceptions\NotFoundException
+     * @throws \yedincisenol\Parasut\Exceptions\ParasutException
+     * @throws \yedincisenol\Parasut\Exceptions\UnproccessableEntityException
      */
     public function pdf($id)
     {
-        $response = $this->parasut->request('GET', $this->path. '/' . $id . '/pdf');
+        $response = $this->parasut->request('GET', $this->path . '/' . $id . '/pdf');
 
         return new Response($response->getBody());
     }
