@@ -153,6 +153,15 @@ class Client
     }
 
     /**
+     * Set company id
+     * @param integer $companyId
+     */
+    public function setCompanyId($companyId)
+    {
+        $this->config['company_id'] = $companyId;
+    }
+
+    /**
      * Login and fill credentials
      */
     public function login()
@@ -193,6 +202,15 @@ class Client
         $this->login();
 
         return $this->accessToken;
+    }
+
+    /**
+     * Get company id
+     * @return integer Company id
+     */
+    public function getCompanyId()
+    {
+        return $this->config['company_id'];
     }
 
     /**
@@ -245,10 +263,6 @@ class Client
      * @param array $query
      * @param array $body
      * @return mixed|\Psr\Http\Message\ResponseInterface
-     * @throws NotFoundException
-     * @throws ParasutException
-     * @throws UnproccessableEntityException
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function request($method, $path, $query = [], $body = [])
     {
@@ -323,10 +337,6 @@ class Client
      * @param $path
      * @param $parameters
      * @return \Psr\Http\Message\StreamInterface
-     * @throws NotFoundException
-     * @throws ParasutException
-     * @throws UnproccessableEntityException
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function get($path, $parameters)
     {
@@ -338,10 +348,6 @@ class Client
      * @param $path
      * @param $request
      * @return StreamInterface
-     * @throws NotFoundException
-     * @throws ParasutException
-     * @throws UnproccessableEntityException
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function post($path, $request)
     {
