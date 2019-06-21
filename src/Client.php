@@ -195,12 +195,6 @@ class Client
      */
     public function getToken()
     {
-        if ($this->accessToken && strtotime('now') < $this->expiresAt) {
-            return $this->accessToken;
-        }
-
-        $this->login();
-
         return $this->accessToken;
     }
 
@@ -241,10 +235,6 @@ class Client
      */
     public function getClient()
     {
-        if ($this->client) {
-            return $this->client;
-        }
-
         $this->client = new \GuzzleHttp\Client([
             'base_uri'  =>  $this->getBaseUrl(),
             'headers'   =>  [
@@ -304,17 +294,13 @@ class Client
             case 500:
                 throw new ParasutException('Server Error', 500);
                 break;
-            case 401:
-                $this->setToken(null);
-                $this->login();
-                break;
             default:
                 throw new ParasutException($responseBody, $statusCode);
                 break;
         }
     }
 
-    /**
+    /**a
      * Get auth
      * @return string
      */
