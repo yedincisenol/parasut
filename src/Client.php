@@ -3,9 +3,7 @@
 namespace yedincisenol\Parasut;
 
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Psr7;
 use GuzzleHttp\Exception\ClientException;
-use http\Message;
 use Psr\Http\Message\StreamInterface;
 use yedincisenol\Parasut\Exceptions\NotFoundException;
 use yedincisenol\Parasut\Exceptions\ParasutException;
@@ -14,6 +12,7 @@ use yedincisenol\Parasut\Models\Contact;
 use yedincisenol\Parasut\Models\EArchive;
 use yedincisenol\Parasut\Models\EInvoice;
 use yedincisenol\Parasut\Models\EInvoiceInbox;
+use yedincisenol\Parasut\Models\Me;
 use yedincisenol\Parasut\Models\PurchaseBill;
 use yedincisenol\Parasut\Models\SaleInvoice;
 use yedincisenol\Parasut\Models\Tag;
@@ -430,6 +429,6 @@ class Client
 
     public function me()
     {
-        return new User($this);
+        return new Me($this);
     }
 }
