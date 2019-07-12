@@ -5,6 +5,7 @@ namespace yedincisenol\Parasut;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Exception\ClientException;
+use http\Message;
 use Psr\Http\Message\StreamInterface;
 use yedincisenol\Parasut\Exceptions\NotFoundException;
 use yedincisenol\Parasut\Exceptions\ParasutException;
@@ -231,12 +232,13 @@ class Client
 
     /**
      * Get guzzle client;
+     * @param $appendCompanyId
      * @return \GuzzleHttp\Client
      */
-    public function getClient()
+    public function getClient($appendCompanyId)
     {
         $this->client = new \GuzzleHttp\Client([
-            'base_uri'  =>  $this->getBaseUrl(),
+            'base_uri'  =>  $this->getBaseUrl($appendCompanyId),
             'headers'   =>  [
                 'Authorization' =>  $this->getAuth(),
                 'Content-type' => 'application/json; charset=utf-8',
@@ -252,17 +254,22 @@ class Client
      * @param $path
      * @param array $query
      * @param array $body
+     * @param bool $appendCompanyId
      * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @throws NotFoundException
+     * @throws ParasutException
+     * @throws UnproccessableEntityException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function request($method, $path, $query = [], $body = [])
+    public function request($method, $path, $query = [], $body = [], $appendCompanyId = true)
     {
         $response = null;
         $body = json_encode($body);
-
         try {
-            $response = $this->getClient()->request($method, $path, [
-                'query' =>  $query,
-                'body'  =>  $body,
+            print_r($query);
+            $response = $this->getClient($appendCompanyId)->request($method, $path, [
+                'body' => $body,
+                'query' => $query,
             ]);
 
             return $response;
@@ -311,18 +318,23 @@ class Client
 
     /**
      * Get base url of API
+     * @param $appendCompanyId
      * @return string
      */
-    private function getBaseUrl()
+    private function getBaseUrl($appendCompanyId)
     {
         $url = $this->isStage ? self::STAGE_API_URL : self::API_URL;
-        return $url . $this->config['company_id'] . '/';
+        return $url . ($appendCompanyId ? $this->config['company_id'] . '/' : '');
     }
 
     /**
      * @param $path
      * @param $parameters
      * @return \Psr\Http\Message\StreamInterface
+     * @throws NotFoundException
+     * @throws ParasutException
+     * @throws UnproccessableEntityException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function get($path, $parameters)
     {
@@ -334,6 +346,10 @@ class Client
      * @param $path
      * @param $request
      * @return StreamInterface
+     * @throws NotFoundException
+     * @throws ParasutException
+     * @throws UnproccessableEntityException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function post($path, $request)
     {
@@ -410,5 +426,10 @@ class Client
     public function trackable()
     {
         return new Trackable($this);
+    }
+
+    public function me()
+    {
+        return new User($this);
     }
 }

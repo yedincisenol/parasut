@@ -51,10 +51,17 @@ class Response
 
     /**
      * Get includes
+     * @param null $type
      * @return mixed
      */
-    public function getIncluded()
+    public function getIncluded($type = null)
     {
+        if ($type) {
+            return array_filter($this->array['included'], function ($array) use ($type) {
+                return $array['type'] == $type;
+            });
+        }
+
         return $this->array['included'];
     }
 }
