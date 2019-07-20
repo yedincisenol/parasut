@@ -265,7 +265,6 @@ class Client
         $response = null;
         $body = json_encode($body);
         try {
-            print_r($query);
             $response = $this->getClient($appendCompanyId)->request($method, $path, [
                 'body' => $body,
                 'query' => $query,
