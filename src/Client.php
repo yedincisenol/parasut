@@ -17,7 +17,7 @@ use yedincisenol\Parasut\Models\PurchaseBill;
 use yedincisenol\Parasut\Models\SaleInvoice;
 use yedincisenol\Parasut\Models\Tag;
 use yedincisenol\Parasut\Models\Trackable;
-use yedincisenol\Parasut\Models\Trackable;
+use yedincisenol\Parasut\Models\Product;
 
 class Client
 {
