@@ -6,6 +6,12 @@ use Throwable;
 
 class ParasutException extends \Exception
 {
+    /**
+     * ParasutException constructor.
+     * @param string $message
+     * @param int $code
+     * @param Throwable|null $previous
+     */
     public function __construct($message = "", $code = 0, Throwable $previous = null)
     {
         if ($this->isJson($message)) {
@@ -13,7 +19,7 @@ class ParasutException extends \Exception
             $errorMessage = null;
             if (is_array($responseArray['errors'])) {
                 foreach ($responseArray['errors'] as $error) {
-                    $errorMessage .= $error['detail'];
+                    $errorMessage .= @$error['detail'];
                 }
             } else {
                 $errorMessage = $message;
@@ -25,6 +31,11 @@ class ParasutException extends \Exception
         }
     }
 
+    /**
+     * Is string a json?
+     * @param $string
+     * @return bool
+     */
     private function isJson($string)
     {
         json_decode($string);

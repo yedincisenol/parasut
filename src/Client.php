@@ -7,6 +7,7 @@ use GuzzleHttp\Exception\ClientException;
 use Psr\Http\Message\StreamInterface;
 use yedincisenol\Parasut\Exceptions\NotFoundException;
 use yedincisenol\Parasut\Exceptions\ParasutException;
+use yedincisenol\Parasut\Exceptions\ToManyRequestException;
 use yedincisenol\Parasut\Exceptions\UnproccessableEntityException;
 use yedincisenol\Parasut\Models\Contact;
 use yedincisenol\Parasut\Models\EArchive;
@@ -265,7 +266,6 @@ class Client
         $response = null;
         $body = json_encode($body);
         try {
-            print_r($query);
             $response = $this->getClient($appendCompanyId)->request($method, $path, [
                 'body' => $body,
                 'query' => $query,
@@ -296,6 +296,9 @@ class Client
                 break;
             case 404:
                 throw new NotFoundException($responseBody . ' - Not Found', $statusCode);
+                break;
+            case 429:
+                throw new ToManyRequestException($responseBody, $statusCode);
                 break;
             case 500:
                 throw new ParasutException('Server Error', 500);
