@@ -9,6 +9,7 @@ use yedincisenol\Parasut\Exceptions\NotFoundException;
 use yedincisenol\Parasut\Exceptions\ParasutException;
 use yedincisenol\Parasut\Exceptions\ToManyRequestException;
 use yedincisenol\Parasut\Exceptions\UnproccessableEntityException;
+use yedincisenol\Parasut\Models\Category;
 use yedincisenol\Parasut\Models\Contact;
 use yedincisenol\Parasut\Models\EArchive;
 use yedincisenol\Parasut\Models\EInvoice;
@@ -367,7 +368,7 @@ class Client
     {
         return new SaleInvoice($this);
     }
-    
+
      /**
      * Get Product model
      * @return Product
@@ -438,6 +439,15 @@ class Client
     public function trackable()
     {
         return new Trackable($this);
+    }
+
+    /**
+     * Get Category object
+     * @return Category
+     */
+    public function category()
+    {
+        return new Category($this);
     }
 
     public function me()
