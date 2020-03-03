@@ -443,7 +443,6 @@ class Client
 
     /**
      * Get Category object
-     *
      * @return Category
      */
     public function category()
