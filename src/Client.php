@@ -9,6 +9,7 @@ use yedincisenol\Parasut\Exceptions\NotFoundException;
 use yedincisenol\Parasut\Exceptions\ParasutException;
 use yedincisenol\Parasut\Exceptions\ToManyRequestException;
 use yedincisenol\Parasut\Exceptions\UnproccessableEntityException;
+use yedincisenol\Parasut\Models\Account;
 use yedincisenol\Parasut\Models\Category;
 use yedincisenol\Parasut\Models\Contact;
 use yedincisenol\Parasut\Models\EArchive;
@@ -448,6 +449,16 @@ class Client
     public function category()
     {
         return new Category($this);
+    }
+
+    /**
+     * Get Account object
+     *
+     * @return Account
+     */
+    public function account()
+    {
+        return new Account($this);
     }
 
     public function me()
