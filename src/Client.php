@@ -209,7 +209,6 @@ class Client
                     'grant_type'    => 'refresh_token',
                     'client_id'     => $this->config['client_id'],
                     'client_secret' => $this->config['client_secret'],
-                    'password'      => $this->config['password'],
                     'redirect_uri'  => $this->config['redirect_uri'],
                     'refresh_token' => $this->refreshToken
                 ]
