@@ -507,6 +507,11 @@ class Client
         return new Account($this);
     }
 
+    /**
+     * Get Me object
+     *
+     * @return Me
+     */
     public function me()
     {
         return new Me($this);
