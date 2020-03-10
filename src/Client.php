@@ -194,6 +194,36 @@ class Client
     }
 
     /**
+     * Login and fill credentials
+     */
+    public function refresh()
+    {
+        $client = new \GuzzleHttp\Client(
+            [
+                'base_url' => $this->getTokenBaseUrl()
+            ]
+        );
+
+        $token = $client->post($this->getTokenBaseUrl(), [
+                'form_params' => [
+                    'grant_type'    => 'refresh_token',
+                    'client_id'     => $this->config['client_id'],
+                    'client_secret' => $this->config['client_secret'],
+                    'password'      => $this->config['password'],
+                    'redirect_uri'  => $this->config['redirect_uri'],
+                    'refresh_token' => $this->refreshToken
+                ]
+            ]);
+
+        $token = $this->toArray($token->getBody());
+        $this->setToken($token['access_token']);
+        $this->setRefreshToken($token['refresh_token']);
+        $this->setExpiresAt($token['expires_in']);
+
+        return $this;
+    }
+
+    /**
      * Get users access token
      * @return mixed
      */
