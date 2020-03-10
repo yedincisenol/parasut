@@ -194,7 +194,7 @@ class Client
     }
 
     /**
-     * Login and fill credentials
+     * Refresh token
      */
     public function refresh()
     {
