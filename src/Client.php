@@ -203,6 +203,22 @@ class Client
     }
 
     /**
+     * @return string|null
+     */
+    public function getRefreshToken()
+    {
+        return $this->refreshToken;
+    }
+
+    /**
+     * @return null
+     */
+    public function getExpiresAt()
+    {
+        return $this->expiresAt;
+    }
+
+    /**
      * Get company id
      * @return integer Company id
      */
