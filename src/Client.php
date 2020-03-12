@@ -170,48 +170,15 @@ class Client
      */
     public function login()
     {
-        return $this->refreshOrGetToken([
-            'grant_type'    => 'password',
-            'client_id'     => $this->config['client_id'],
-            'client_secret' => $this->config['client_secret'],
-            'username'      => $this->config['username'],
-            'password'      => $this->config['password'],
-            'redirect_uri'  => $this->config['redirect_uri']
-        ]);
-    }
-
-    /**
-     * Refresh token
-     */
-    public function refresh()
-    {
-        return $this->refreshOrGetToken([
-            'grant_type'    => 'refresh_token',
-            'client_id'     => $this->config['client_id'],
-            'client_secret' => $this->config['client_secret'],
-            'redirect_uri'  => $this->config['redirect_uri'],
-            'refresh_token' => $this->refreshToken
-        ]);
-    }
-
-    /**
-     * @param array $params
-     * @return $this
-     */
-    private function refreshOrGetToken(array $params)
-    {
-        if (@$params['grant_type'] == 'refresh_token') {
-            unset($params['username']);
-            unset($params['password']);
-        }
-
-
-        $client = new \GuzzleHttp\Client([
-            'base_url' => $this->getTokenBaseUrl()
-        ]);
-
-        $token = $client->post($this->getTokenBaseUrl(), [
-            'form_params' => $params
+        $token = $this->guzzleClient()->post($this->getTokenBaseUrl(), [
+            'form_params' => [
+                'grant_type'    => 'password',
+                'client_id'     => $this->config['client_id'],
+                'client_secret' => $this->config['client_secret'],
+                'username'      => $this->config['username'],
+                'password'      => $this->config['password'],
+                'redirect_uri'  => $this->config['redirect_uri']
+            ]
         ]);
 
         $token = $this->toArray($token->getBody());
@@ -220,6 +187,39 @@ class Client
         $this->setExpiresAt($token['expires_in']);
 
         return $this;
+    }
+
+    /**
+     * Refresh token
+     */
+    public function refresh()
+    {
+        $token = $this->guzzleClient()->post($this->getTokenBaseUrl(), [
+            'form_params' => [
+                'grant_type'    => 'refresh_token',
+                'client_id'     => $this->config['client_id'],
+                'client_secret' => $this->config['client_secret'],
+                'redirect_uri'  => $this->config['redirect_uri'],
+                'refresh_token' => $this->refreshToken
+            ]
+        ]);
+
+        $token = $this->toArray($token->getBody());
+        $this->setToken($token['access_token']);
+        $this->setRefreshToken($token['refresh_token']);
+        $this->setExpiresAt($token['expires_in']);
+
+        return $this;
+    }
+
+    /**
+     * @return \GuzzleHttp\Client
+     */
+    private function guzzleClient()
+    {
+        return new \GuzzleHttp\Client([
+            'base_url' => $this->getTokenBaseUrl()
+        ]);
     }
 
     /**
