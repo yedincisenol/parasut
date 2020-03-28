@@ -23,7 +23,7 @@
                 "yedincisenol\\Parasut\\Laravel\\LaravelServiceProvider"
             ],
             "aliases": {
-                "Parasut": "yedincisenol\\Parasut\\Laravel\\LaravelFacede"
+                "Parasut": "yedincisenol\\Parasut\\Laravel\\LaravelFacade"
             }
         }
     }
