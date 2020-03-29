@@ -32,6 +32,10 @@ class LaravelServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/parasut.php', 'parasut'
+        );
+
         $this->app->singleton(Parasut::class, function ($app) {
             return new Client(
                 array_get($app['config'], 'parasut.connection.client_id'),
