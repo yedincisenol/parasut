@@ -213,6 +213,31 @@ class Client
     }
 
     /**
+     * Get token by authorization code
+     * @param $code
+     * @return Client
+     */
+    public function code($code)
+    {
+        $token = $this->guzzleClient()->post($this->getTokenBaseUrl(), [
+            'form_params' => [
+                'grant_type'    => 'authorization_code',
+                'client_id'     => $this->config['client_id'],
+                'client_secret' => $this->config['client_secret'],
+                'redirect_uri'  => $this->config['redirect_uri'],
+                'code' => $code
+            ]
+        ]);
+
+        $token = $this->toArray($token->getBody());
+        $this->setToken($token['access_token']);
+        $this->setRefreshToken($token['refresh_token']);
+        $this->setExpiresAt($token['expires_in']);
+
+        return $this;
+    }
+
+    /**
      * @return \GuzzleHttp\Client
      */
     private function guzzleClient()
