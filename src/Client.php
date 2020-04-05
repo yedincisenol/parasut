@@ -90,6 +90,12 @@ class Client
     private $isStage = false;
 
     /**
+     * Redirect url
+     * @var null $redirectUri
+     */
+    private $redirectUri = null;
+
+    /**
      * GuzzleHttp client
      * @var null
      */
@@ -124,6 +130,21 @@ class Client
         ];
 
         $this->isStage = $isStage;
+        $this->setRedirectUri($redirectUri);
+    }
+
+    /**
+     * Set redirect uri
+     * @param $redirectUri
+     */
+    public function setRedirectUri($redirectUri)
+    {
+        $this->redirectUri = $redirectUri;
+    }
+
+    public function getRedirectUri()
+    {
+        return $this->redirectUri;
     }
 
     /**
@@ -177,7 +198,7 @@ class Client
                 'client_secret' => $this->config['client_secret'],
                 'username'      => $this->config['username'],
                 'password'      => $this->config['password'],
-                'redirect_uri'  => $this->config['redirect_uri']
+                'redirect_uri'  => $this->getRedirectUri()
             ]
         ]);
 
@@ -199,7 +220,7 @@ class Client
                 'grant_type'    => 'refresh_token',
                 'client_id'     => $this->config['client_id'],
                 'client_secret' => $this->config['client_secret'],
-                'redirect_uri'  => $this->config['redirect_uri'],
+                'redirect_uri'  => $this->getRedirectUri(),
                 'refresh_token' => $this->refreshToken
             ]
         ]);
@@ -224,7 +245,7 @@ class Client
                 'grant_type'    => 'authorization_code',
                 'client_id'     => $this->config['client_id'],
                 'client_secret' => $this->config['client_secret'],
-                'redirect_uri'  => $this->config['redirect_uri'],
+                'redirect_uri'  => $this->getRedirectUri(),
                 'code' => $code
             ]
         ]);
