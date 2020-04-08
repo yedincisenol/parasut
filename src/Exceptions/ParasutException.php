@@ -19,7 +19,11 @@ class ParasutException extends \Exception
             $errorMessage = null;
             if (is_array($responseArray['errors'])) {
                 foreach ($responseArray['errors'] as $error) {
-                    $errorMessage .= @$error['detail'];
+                    if (is_array($error)) {
+                        $errorMessage .= @$error['detail'];
+                    } else {
+                        $errorMessage = $error;
+                    }
                 }
             } else {
                 $errorMessage = $message;

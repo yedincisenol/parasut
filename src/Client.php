@@ -5,9 +5,11 @@ namespace yedincisenol\Parasut;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ClientException;
 use Psr\Http\Message\StreamInterface;
+use yedincisenol\Parasut\Exceptions\AccountExpiredException;
 use yedincisenol\Parasut\Exceptions\NotFoundException;
 use yedincisenol\Parasut\Exceptions\ParasutException;
 use yedincisenol\Parasut\Exceptions\ToManyRequestException;
+use yedincisenol\Parasut\Exceptions\UnauthenticatedException;
 use yedincisenol\Parasut\Exceptions\UnproccessableEntityException;
 use yedincisenol\Parasut\Models\Account;
 use yedincisenol\Parasut\Models\Category;
@@ -385,6 +387,11 @@ class Client
         $responseBody = (string) $e->getResponse()->getBody();
         $statusCode = $e->getResponse()->getStatusCode();
         switch ($statusCode) {
+            case 401:
+                throw new UnauthenticatedException($responseBody, $statusCode);
+            case 402:
+                throw new AccountExpiredException($responseBody, $statusCode);
+                break;
             case 422:
                 throw new UnproccessableEntityException($responseBody, $statusCode);
                 break;
