@@ -19,11 +19,7 @@ class ParasutException extends \Exception
             $errorMessage = null;
             if (is_array($responseArray['errors'])) {
                 foreach ($responseArray['errors'] as $error) {
-                    if (is_array($error)) {
-                        $errorMessage .= @$error['detail'];
-                    } else {
-                        $errorMessage = $error;
-                    }
+                    $errorMessage = $this->getErrorDetail($error);
                 }
             } else {
                 $errorMessage = $message;
@@ -33,6 +29,28 @@ class ParasutException extends \Exception
         } else {
             parent::__construct($message, $code, $previous);
         }
+    }
+
+    /**
+     * @param $error
+     * @return string|null
+     */
+    private function getErrorDetail($error)
+    {
+        $errorString = null;
+        if (is_array($error)) {
+            if (isset($error['detail'])) {
+                $errorString .= $error['detail'];
+            }
+
+            if (isset($error['title'])) {
+                $errorString .= ' ' . $error['title'];
+            }
+        } elseif (is_string($error)) {
+            $errorString = $error;
+        }
+
+        return $errorString;
     }
 
     /**
