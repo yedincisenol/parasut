@@ -172,11 +172,11 @@ class Client
 
     /**
      * Set expires at
-     * @param $expiresIn
+     * @param $expiresAt
      */
-    public function setExpiresAt($expiresIn)
+    public function setExpiresAt($expiresAt)
     {
-        $this->expiresAt = strtotime('-10 minutes') + $expiresIn;
+        $this->expiresAt = $expiresAt;
     }
 
     /**
@@ -207,7 +207,7 @@ class Client
         $token = $this->toArray($token->getBody());
         $this->setToken($token['access_token']);
         $this->setRefreshToken($token['refresh_token']);
-        $this->setExpiresAt($token['expires_in']);
+        $this->setExpiresAt(strtotime('now') + $token['expires_in']);
 
         return $this;
     }
@@ -230,7 +230,7 @@ class Client
         $token = $this->toArray($token->getBody());
         $this->setToken($token['access_token']);
         $this->setRefreshToken($token['refresh_token']);
-        $this->setExpiresAt($token['expires_in']);
+        $this->setExpiresAt(strtotime('now') + $token['expires_in']);
 
         return $this;
     }
@@ -255,7 +255,7 @@ class Client
         $token = $this->toArray($token->getBody());
         $this->setToken($token['access_token']);
         $this->setRefreshToken($token['refresh_token']);
-        $this->setExpiresAt($token['expires_in']);
+        $this->setExpiresAt(strtotime('now') + $token['expires_in']);
 
         return $this;
     }
