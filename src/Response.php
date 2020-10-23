@@ -37,7 +37,7 @@ class Response
             return $this->array['data'][$key];
         }
 
-        return $this->array['data'];
+        return $this->array['data'] ?? [];
     }
 
     /**
@@ -46,7 +46,7 @@ class Response
      */
     public function getMeta()
     {
-        return $this->array['meta'];
+        return $this->array['meta'] ?? [];
     }
 
     /**
@@ -62,6 +62,6 @@ class Response
             });
         }
 
-        return $this->array['included'];
+        return $this->array['included'] ?? [];
     }
 }
