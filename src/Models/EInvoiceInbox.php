@@ -2,7 +2,11 @@
 
 namespace yedincisenol\Parasut\Models;
 
+use GuzzleHttp\Exception\GuzzleException;
 use yedincisenol\Parasut\Client;
+use yedincisenol\Parasut\Exceptions\NotFoundException;
+use yedincisenol\Parasut\Exceptions\ParasutException;
+use yedincisenol\Parasut\Exceptions\UnproccessableEntityException;
 use yedincisenol\Parasut\Response;
 
 class EInvoiceInbox
@@ -24,6 +28,10 @@ class EInvoiceInbox
      * List all models
      * @param array $parameters
      * @return Response
+     * @throws GuzzleException
+     * @throws NotFoundException
+     * @throws ParasutException
+     * @throws UnproccessableEntityException
      */
     public function all($parameters = [])
     {

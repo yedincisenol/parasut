@@ -2,9 +2,10 @@
 
 namespace yedincisenol\Parasut\Exceptions;
 
+use Exception;
 use Throwable;
 
-class ParasutException extends \Exception
+class ParasutException extends Exception
 {
     /**
      * ParasutException constructor.

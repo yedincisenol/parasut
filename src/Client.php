@@ -2,8 +2,10 @@
 
 namespace yedincisenol\Parasut;
 
-use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\RequestException;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use yedincisenol\Parasut\Exceptions\AccountExpiredException;
 use yedincisenol\Parasut\Exceptions\NotFoundException;
@@ -18,11 +20,11 @@ use yedincisenol\Parasut\Models\EArchive;
 use yedincisenol\Parasut\Models\EInvoice;
 use yedincisenol\Parasut\Models\EInvoiceInbox;
 use yedincisenol\Parasut\Models\Me;
+use yedincisenol\Parasut\Models\Product;
 use yedincisenol\Parasut\Models\PurchaseBill;
 use yedincisenol\Parasut\Models\SaleInvoice;
 use yedincisenol\Parasut\Models\Tag;
 use yedincisenol\Parasut\Models\Trackable;
-use yedincisenol\Parasut\Models\Product;
 
 class Client
 {
@@ -32,28 +34,28 @@ class Client
      *
      * @return string
      */
-    const API_URL = 'https://api.parasut.com/v4/';
+    public const API_URL = 'https://api.parasut.com/v4/';
 
     /**
      * The oAuth token url.
      *
      * @var string
      */
-    const API_TOKEN_URL = 'https://api.parasut.com/oauth/token';
+    public const API_TOKEN_URL = 'https://api.parasut.com/oauth/token';
 
     /**
      * The base api url for stage.
      *
      * @return string
      */
-    const STAGE_API_URL = 'https://api.heroku-staging.parasut.com/v4/';
+    public const STAGE_API_URL = 'https://api.heroku-staging.parasut.com/v4/';
 
     /**
      * The oAuth token url for stage.
      *
      * @var string
      */
-    const STAGE_API_TOKEN_URL = 'https://api.heroku-staging.parasut.com/oauth/token';
+    public const STAGE_API_TOKEN_URL = 'https://api.heroku-staging.parasut.com/oauth/token';
 
     /**
      * Parasut connection config
@@ -181,7 +183,7 @@ class Client
 
     /**
      * Set company id
-     * @param integer $companyId
+     * @param int $companyId
      */
     public function setCompanyId($companyId)
     {
@@ -297,7 +299,7 @@ class Client
 
     /**
      * Get company id
-     * @return integer Company id
+     * @return int Company id
      */
     public function getCompanyId()
     {
@@ -351,11 +353,11 @@ class Client
      * @param array $query
      * @param array $body
      * @param bool $appendCompanyId
-     * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @return mixed|ResponseInterface
      * @throws NotFoundException
      * @throws ParasutException
      * @throws UnproccessableEntityException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function request($method, $path, $query = [], $body = [], $appendCompanyId = true)
     {
@@ -391,22 +393,16 @@ class Client
                 throw new UnauthenticatedException($responseBody, $statusCode);
             case 402:
                 throw new AccountExpiredException($responseBody, $statusCode);
-                break;
             case 422:
                 throw new UnproccessableEntityException($responseBody, $statusCode);
-                break;
             case 404:
                 throw new NotFoundException($responseBody . ' - Not Found', $statusCode);
-                break;
             case 429:
                 throw new ToManyRequestException($responseBody, $statusCode);
-                break;
             case 500:
                 throw new ParasutException('Server Error', 500);
-                break;
             default:
                 throw new ParasutException($responseBody, $statusCode);
-                break;
         }
     }
 
@@ -433,11 +429,11 @@ class Client
     /**
      * @param $path
      * @param $parameters
-     * @return \Psr\Http\Message\StreamInterface
+     * @return StreamInterface
      * @throws NotFoundException
      * @throws ParasutException
      * @throws UnproccessableEntityException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function get($path, $parameters)
     {
@@ -452,7 +448,7 @@ class Client
      * @throws NotFoundException
      * @throws ParasutException
      * @throws UnproccessableEntityException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function post($path, $request)
     {

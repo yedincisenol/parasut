@@ -1,6 +1,6 @@
 <?php
 
-namespace yedincisenol\Parasut;
+namespace yedincisenol\Parasut\Laravel;
 
 interface Parasut
 {

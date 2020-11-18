@@ -2,6 +2,10 @@
 
 namespace yedincisenol\Parasut\Models;
 
+use GuzzleHttp\Exception\GuzzleException;
+use yedincisenol\Parasut\Exceptions\NotFoundException;
+use yedincisenol\Parasut\Exceptions\ParasutException;
+use yedincisenol\Parasut\Exceptions\UnproccessableEntityException;
 use yedincisenol\Parasut\RequestModel;
 use yedincisenol\Parasut\Response;
 
@@ -14,10 +18,10 @@ class SaleInvoice extends Model
      * @param Request|RequestModel $request
      * @param array $query
      * @return Response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \yedincisenol\Parasut\Exceptions\NotFoundException
-     * @throws \yedincisenol\Parasut\Exceptions\ParasutException
-     * @throws \yedincisenol\Parasut\Exceptions\UnproccessableEntityException
+     * @throws GuzzleException
+     * @throws NotFoundException
+     * @throws ParasutException
+     * @throws UnproccessableEntityException
      */
     public function payment(RequestModel $request, $query = [])
     {
