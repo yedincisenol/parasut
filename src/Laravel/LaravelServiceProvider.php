@@ -2,9 +2,8 @@
 
 namespace yedincisenol\Parasut\Laravel;
 
-use yedincisenol\Parasut\Client;
-use yedincisenol\Parasut\Parasut;
 use Illuminate\Support\ServiceProvider;
+use yedincisenol\Parasut\Client;
 
 class LaravelServiceProvider extends ServiceProvider
 {

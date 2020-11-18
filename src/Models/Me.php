@@ -2,6 +2,10 @@
 
 namespace yedincisenol\Parasut\Models;
 
+use GuzzleHttp\Exception\GuzzleException;
+use yedincisenol\Parasut\Exceptions\NotFoundException;
+use yedincisenol\Parasut\Exceptions\ParasutException;
+use yedincisenol\Parasut\Exceptions\UnproccessableEntityException;
 use yedincisenol\Parasut\Response;
 
 class Me extends Model
@@ -12,10 +16,10 @@ class Me extends Model
      * List all models
      * @param array $parameters
      * @return Response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \yedincisenol\Parasut\Exceptions\NotFoundException
-     * @throws \yedincisenol\Parasut\Exceptions\ParasutException
-     * @throws \yedincisenol\Parasut\Exceptions\UnproccessableEntityException
+     * @throws GuzzleException
+     * @throws NotFoundException
+     * @throws ParasutException
+     * @throws UnproccessableEntityException
      */
     public function get($parameters = [])
     {
