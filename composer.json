@@ -3,7 +3,7 @@
     "description": "Parasut.com v4 Api Php and Laravel client",
     "type": "library",
     "require": {
-        "guzzlehttp/guzzle": "^6.3",
+        "guzzlehttp/guzzle": "^7.2",
         "ext-json": "*"
     },
     "autoload": {
