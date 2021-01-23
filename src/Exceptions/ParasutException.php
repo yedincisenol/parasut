@@ -18,7 +18,7 @@ class ParasutException extends Exception
         if ($this->isJson($message)) {
             $responseArray = json_decode($message, true);
             $errorMessage = null;
-            if (is_array($responseArray['errors'])) {
+            if (isset($responseArray['errors']) && is_array($responseArray['errors'])) {
                 foreach ($responseArray['errors'] as $error) {
                     $errorMessage = $this->getErrorDetail($error);
                 }
