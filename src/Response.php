@@ -56,7 +56,7 @@ class Response
      */
     public function getIncluded($type = null)
     {
-        if (isset($this->array['included'])) {
+        if (!isset($this->array['included'])) {
             $this->array['included'] = [];
         }
         if ($type) {
