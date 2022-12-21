@@ -56,12 +56,15 @@ class Response
      */
     public function getIncluded($type = null)
     {
+        if (isset($this->array['included'])) {
+            $this->array['included'] = [];
+        }
         if ($type) {
             return array_filter($this->array['included'], function ($array) use ($type) {
                 return $array['type'] == $type;
             });
         }
 
-        return $this->array['included'] ?? [];
+        return $this->array['included'];
     }
 }
