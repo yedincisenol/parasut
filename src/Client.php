@@ -14,6 +14,7 @@ use yedincisenol\Parasut\Exceptions\NotFoundException;
 use yedincisenol\Parasut\Exceptions\ParasutException;
 use yedincisenol\Parasut\Exceptions\ToManyRequestException;
 use yedincisenol\Parasut\Exceptions\UnauthenticatedException;
+use yedincisenol\Parasut\Exceptions\UnauthorizedException;
 use yedincisenol\Parasut\Exceptions\UnproccessableEntityException;
 use yedincisenol\Parasut\Models\Account;
 use yedincisenol\Parasut\Models\Category;
@@ -395,6 +396,8 @@ class Client
                 throw new UnauthenticatedException($responseBody, $statusCode);
             case 402:
                 throw new AccountExpiredException($responseBody, $statusCode);
+            case 403:
+                throw new UnauthorizedException($responseBody, $statusCode);
             case 422:
                 throw new UnproccessableEntityException($responseBody, $statusCode);
             case 404:
