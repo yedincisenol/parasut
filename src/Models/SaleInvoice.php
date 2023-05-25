@@ -35,7 +35,7 @@ class SaleInvoice extends Model
         return new Response($model->getBody());
     }
 
-        /**
+    /**
      * Cancel sale invoice
      * @param string $id
      * @return bool
