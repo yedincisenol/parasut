@@ -34,4 +34,21 @@ class SaleInvoice extends Model
 
         return new Response($model->getBody());
     }
+
+        /**
+     * Cancel sale invoice
+     * @param string $id
+     * @return bool
+     * @see https://apidocs.parasut.com/#operation/cancelSalesInvoice
+     * @throws GuzzleException
+     */
+    public function cancelInvoice(string $id): bool
+    {
+        $model = $this->parasut->request(
+            'DELETE',
+            $this->path . '/' . $id . '/cancel'
+        );
+
+        return $model->getStatusCode() === 200;
+    }
 }
