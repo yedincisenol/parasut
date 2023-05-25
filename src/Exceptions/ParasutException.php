@@ -17,16 +17,17 @@ class ParasutException extends Exception
     {
         if ($this->isJson($message)) {
             $responseArray = json_decode($message, true);
+
             $errorMessage = null;
             if (isset($responseArray['errors']) && is_array($responseArray['errors'])) {
                 foreach ($responseArray['errors'] as $error) {
-                    $errorMessage = $this->getErrorDetail($error);
+                    $errorMessage .= ' '. $this->getErrorDetail($error);
                 }
             } else {
                 $errorMessage = $message;
             }
 
-            parent::__construct($errorMessage, $code, $previous);
+            parent::__construct(trim($errorMessage), $code, null);
         } else {
             parent::__construct($message, $code, $previous);
         }
