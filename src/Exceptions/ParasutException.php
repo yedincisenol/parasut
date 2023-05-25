@@ -29,7 +29,7 @@ class ParasutException extends Exception
 
             parent::__construct(trim($errorMessage), $code, null);
         } else {
-            parent::__construct($message, $code, $previous);
+            parent::__construct($message, $code, null);
         }
     }
 
