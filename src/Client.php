@@ -28,6 +28,7 @@ use yedincisenol\Parasut\Models\PurchaseBill;
 use yedincisenol\Parasut\Models\SaleInvoice;
 use yedincisenol\Parasut\Models\Tag;
 use yedincisenol\Parasut\Models\Trackable;
+use GuzzleHttp\HandlerStack;
 
 class Client
 {
@@ -70,7 +71,8 @@ class Client
         'redirect_uri'  => null,
         'username'      => null,
         'password'      => null,
-        'company_id'    => null
+        'company_id'    => null,
+        'handler'       => null,
     ];
 
     /**
@@ -109,6 +111,11 @@ class Client
     private $client = null;
 
     /**
+     * @var ?HandlerStack
+     */
+    private ?HandlerStack $handlerStack;
+
+    /**
      * Client constructor.
      * @param $clientID
      * @param $clientSecret
@@ -125,7 +132,8 @@ class Client
         $username,
         $password,
         $companyID,
-        $isStage = false
+        $isStage = false,
+        ?HandlerStack $handlerStack = null
     ) {
         $this->config = [
             'client_id'     => $clientID,
@@ -133,11 +141,13 @@ class Client
             'redirect_uri'  => $redirectUri,
             'username'      => $username,
             'password'      => $password,
-            'company_id'    => $companyID
+            'company_id'    => $companyID,
+            'handler'       => $handlerStack,
         ];
 
         $this->isStage = $isStage;
         $this->setRedirectUri($redirectUri);
+        $this->setHandlerStack();
     }
 
     /**
@@ -343,7 +353,8 @@ class Client
             'headers'  => [
                 'Authorization' => $this->getAuth(),
                 'Content-type'  => 'application/json; charset=utf-8',
-            ]
+            ],
+            'handler' => $this->getHandlerStack()
         ]);
 
         return $this->client;
@@ -578,5 +589,15 @@ class Client
     public function stockUpdate()
     {
         return new StockUpdate($this);
+    }
+
+    public function setHandlerStack(): void
+    {
+        $this->handlerStack = $this->config['handler'];
+    }
+
+    public function getHandlerStack(): ?HandlerStack
+    {
+        return $this->handlerStack;
     }
 }
