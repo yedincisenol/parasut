@@ -271,7 +271,11 @@ class Client
     private function guzzleClient()
     {
         return new \GuzzleHttp\Client([
-            'base_url' => $this->getTokenBaseUrl()
+            'base_url' => $this->getTokenBaseUrl(), array(
+                'curl.options' => array(
+                    CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2
+                )
+            )
         ]);
     }
 
