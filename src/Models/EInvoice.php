@@ -27,4 +27,11 @@ class EInvoice extends Model
 
         return new Response($response->getBody());
     }
+
+    public function convert($id)
+    {
+        $response = $this->parasut->request('GET', $this->path . '/' . $id . '/covert');
+
+        return new Response($response->getBody());
+    }
 }
