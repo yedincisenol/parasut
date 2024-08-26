@@ -56,7 +56,7 @@ class EInvoice extends Model
             $this->path . '/' .$id . '/accept',
             [],
             [
-                'respond' => ['contact' => null, 'products' => null]
+                'respond' => ['contact' => false, 'products' => false]
             ]
         );
 
