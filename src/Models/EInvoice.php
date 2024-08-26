@@ -34,4 +34,32 @@ class EInvoice extends Model
 
         return new Response($response->getBody());
     }
+
+    public function reject($id, $note)
+    {
+        $model = $this->parasut->request(
+            'POST',
+            $this->path . '/' .$id . '/reject',
+            [],
+            [
+                'respond' => ['note' => $note]
+            ]
+        );
+
+        return new Response($model->getBody());
+    }
+
+    public function accept($id)
+    {
+        $model = $this->parasut->request(
+            'POST',
+            $this->path . '/' .$id . '/accept',
+            [],
+            [
+                'respond' => ['contact' => null, 'products' => null]
+            ]
+        );
+
+        return new Response($model->getBody());
+    }
 }
