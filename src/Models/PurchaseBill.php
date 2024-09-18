@@ -34,4 +34,19 @@ class PurchaseBill extends Model
 
         return new Response($model->getBody());
     }
+
+    /**
+     * @param $id
+     * @param $query
+     * @return Response
+     * @throws NotFoundException
+     * @throws ParasutException
+     * @throws UnproccessableEntityException
+     */
+    public function details($id, $query = [])
+    {
+        $response = $this->parasut->request('GET', 'purchase_bills/' . $id . '/details', $query);
+
+        return new Response($response->getBody());
+    }
 }
