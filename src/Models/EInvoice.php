@@ -39,10 +39,15 @@ class EInvoice extends Model
     {
         $model = $this->parasut->request(
             'POST',
-            $this->path . '/' .$id . '/reject',
+            $this->path . '/' .$id . '/respond',
             [],
             [
-                'respond' => ['note' => $note]
+                'data' => [
+                    'attributes' => [
+                        'response_type' => 'rejected',
+                        'note' => $note
+                    ]
+                ]
             ]
         );
 
@@ -53,10 +58,14 @@ class EInvoice extends Model
     {
         $model = $this->parasut->request(
             'POST',
-            $this->path . '/' .$id . '/accept',
+            $this->path . '/' .$id . '/respond',
             [],
             [
-                'respond' => ['contact' => false, 'products' => false]
+                'data' => [
+                    'attributes' => [
+                        'response_type' => 'accepted',
+                    ]
+                ]
             ]
         );
 
