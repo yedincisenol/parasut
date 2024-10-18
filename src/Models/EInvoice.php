@@ -44,7 +44,7 @@ class EInvoice extends Model
             [
                 'data' => [
                     'attributes' => [
-                        'response_type' => 'rejected',
+                        'response_type' => 'reject',
                         'note' => $note
                     ]
                 ]
@@ -63,7 +63,7 @@ class EInvoice extends Model
             [
                 'data' => [
                     'attributes' => [
-                        'response_type' => 'accepted',
+                        'response_type' => 'accept',
                     ]
                 ]
             ]
