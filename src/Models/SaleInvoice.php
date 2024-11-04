@@ -53,4 +53,11 @@ class SaleInvoice extends Model
 
         return new Response($model->getBody());
     }
+
+    public function details($id, $query = [])
+    {
+        $response = $this->parasut->request('GET', $this->path . '/' . $id . '/details', $query);
+
+        return new Response($response->getBody());
+    }
 }
