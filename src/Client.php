@@ -7,6 +7,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use yedincisenol\Parasut\Models\SubscriptionInfo;
 use yedincisenol\Parasut\Models\Warehouse;
 use yedincisenol\Parasut\Models\StockUpdate;
 use yedincisenol\Parasut\Exceptions\AccountExpiredException;
@@ -594,5 +595,10 @@ class Client
     public function stockUpdate()
     {
         return new StockUpdate($this);
+    }
+
+    public function subscriptionInfo()
+    {
+        return new SubscriptionInfo($this);
     }
 }
