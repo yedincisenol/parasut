@@ -31,7 +31,7 @@ use yedincisenol\Parasut\Models\Tag;
 use yedincisenol\Parasut\Models\Trackable;
 use GuzzleHttp\HandlerStack;
 
-class Client
+class Client implements ParasutInterface
 {
 
     /**
