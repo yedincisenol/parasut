@@ -21,6 +21,7 @@ use yedincisenol\Parasut\Models\Account;
 use yedincisenol\Parasut\Models\Category;
 use yedincisenol\Parasut\Models\Contact;
 use yedincisenol\Parasut\Models\EArchive;
+use yedincisenol\Parasut\Models\Expenditure;
 use yedincisenol\Parasut\Models\EInvoice;
 use yedincisenol\Parasut\Models\EInvoiceInbox;
 use yedincisenol\Parasut\Models\Me;
@@ -600,5 +601,14 @@ class Client implements ParasutInterface
     public function subscriptionInfo()
     {
         return new SubscriptionInfo($this);
+    }
+
+    /**
+     * Get Expenditure object
+     * @return Expenditure
+     */
+    public function expenditure()
+    {
+        return new Expenditure($this);
     }
 }

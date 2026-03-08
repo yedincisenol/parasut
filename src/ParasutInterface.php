@@ -35,4 +35,6 @@ interface ParasutInterface
     public function account();
 
     public function me();
+
+    public function expenditure();
 }
