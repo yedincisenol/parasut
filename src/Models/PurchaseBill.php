@@ -11,7 +11,7 @@ use yedincisenol\Parasut\Response;
 
 class PurchaseBill extends Model
 {
-    protected $path = 'purchase_bills#detailed';
+    protected $path = 'purchase_bills';
 
     /**
      * Create new payment
